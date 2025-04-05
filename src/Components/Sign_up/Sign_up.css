@@ -32,8 +32,9 @@
 
 /* Styles for additional signup text */
 .signup-text1 {
-    grid-column: -1 / 3; /* Span from second to third column from the end */
-    text-align: right; /* Right-align text */
+    grid-column: 1 / 4; /* Span across all three columns to center it */
+    text-align: center; /* Center-align text instead of right-align */
+    margin-bottom: 20px; /* Add some bottom margin for spacing */
 }
 
 .signup-text1 span {
@@ -102,6 +103,8 @@
     border: none; /* Remove button borders */
     border-radius: 4px; /* Add border radius for rounded corners */
     cursor: pointer; /* Change cursor to pointer on hover */
+    width: 120px; /* Set a fixed width for the buttons */
+    margin-right: 10px; /* Add some space between buttons */
 }
 
 /* Styles for primary button in the signup form */

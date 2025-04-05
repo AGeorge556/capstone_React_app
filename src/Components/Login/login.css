@@ -40,6 +40,8 @@
     border: none; /* No border for buttons */
     border-radius: 4px; /* Border radius for rounded corners on buttons */
     cursor: pointer; /* Cursor style on hover for buttons */
+    width: 120px; /* Set a fixed width for the buttons */
+    margin-right: 10px; /* Add some space between buttons */
 }
 
 /* Styles for primary buttons */
@@ -52,4 +54,10 @@
 .btn-danger {
     background-color: #dc3545; /* Background color for danger buttons */
     color: #fff; /* Text color for danger buttons */
+}
+
+/* Add styles for the login text */
+.login-text {
+    text-align: center; /* Center the "Are you a new member?" text */
+    margin-bottom: 10px; /* Add some space below the text */
 }

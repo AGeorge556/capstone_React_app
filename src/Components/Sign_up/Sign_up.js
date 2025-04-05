@@ -98,7 +98,7 @@ const SignUp = () => {
                 <div className="signup-text">
                     <h1>Sign Up</h1>
                 </div>
-                <div className="signup-text1" style={{ textAlign: 'left' }}>
+                <div className="signup-text1">
                     Already a member? <span><Link to="/login" style={{ color: '#2190FF' }}>Login</Link></span>
                 </div>
                 <div className="signup-form">
