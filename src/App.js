@@ -6,7 +6,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Import custom Navbar component
 import Navbar from './Components/Navbar/navbar';
-import Landing_page from './components/Landing_page';  // Ensure correct capitalization
+import Landing_page from './Components/Landing_page/Landing_page';  // Ensure correct capitalization
 
 // Function component for the main App
 function App() {
