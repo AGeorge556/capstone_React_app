@@ -1,13 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './navbar.css';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = ({ handleClick }) => {
+  const navigate = useNavigate();
+  const [userName, setUserName] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  // Check for user authentication on component mount
+  useEffect(() => {
+    const authToken = sessionStorage.getItem('auth-token');
+    const name = sessionStorage.getItem('name');
+    const email = sessionStorage.getItem('email');
+    
+    if (authToken && email) {
+      setIsLoggedIn(true);
+      
+      // Extract name from the email if name is not available
+      if (name) {
+        setUserName(name);
+      } else if (email) {
+        // Extract username from email (before @ symbol)
+        const extractedName = email.split('@')[0];
+        setUserName(extractedName);
+      }
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+  
+  const handleLogout = () => {
+    // Clear session storage
+    sessionStorage.removeItem("name");
+    sessionStorage.removeItem("phone");
+    sessionStorage.removeItem("email");
+    sessionStorage.removeItem("auth-token");
+    
+    // Update state
+    setIsLoggedIn(false);
+    setUserName('');
+    
+    // Navigate to home page
+    navigate('/');
+  };
+
   return (
     <nav>
       {/* Navigation logo section */}
       <div className="nav__logo">
         {/* Link to the home page */}
-        <a href="/">
+        <Link to="/">
           StayHealthy
           {/* Insert an SVG icon of a doctor with a stethoscope */}
           <svg
@@ -26,7 +68,7 @@ const Navbar = ({ handleClick }) => {
               </g>
             </g>
           </svg>
-        </a>
+        </Link>
         <span>.</span>
       </div>
 
@@ -39,21 +81,36 @@ const Navbar = ({ handleClick }) => {
       {/* Unordered list for navigation links with 'active' class */}
       <ul className="nav__links active">
         <li className="link">
-          <a href="../Landing_Page/LandingPage.html">Home</a>
+          <Link to="/">Home</Link>
         </li>
         <li className="link">
-          <a href="#">Appointments</a>
+          <Link to="#">Appointments</Link>
         </li>
-        <li className="link">
-          <a href="../Sign_Up/Sign_Up.html">
-            <button className="btn1">Sign Up</button>
-          </a>
-        </li>
-        <li className="link">
-          <a href="../Login/Login.html">
-            <button className="btn1">Login</button>
-          </a>
-        </li>
+        {isLoggedIn ? (
+          // Display welcome message and logout button if user is logged in
+          <>
+            <li className="link">
+              <span style={{ marginRight: '10px' }}>Hello, {userName}</span>
+            </li>
+            <li className="link">
+              <button className="btn1" onClick={handleLogout}>Logout</button>
+            </li>
+          </>
+        ) : (
+          // Display login and signup buttons if no user is logged in
+          <>
+            <li className="link">
+              <Link to="/signup">
+                <button className="btn1">Sign Up</button>
+              </Link>
+            </li>
+            <li className="link">
+              <Link to="/login">
+                <button className="btn1">Login</button>
+              </Link>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );
