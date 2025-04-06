@@ -1,0 +1,135 @@
+/* Notification container - fixed position at the bottom right of the screen */
+.notification-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+  width: 350px;
+  max-width: 90vw;
+  transform: translateY(0);
+  animation: slide-in 0.5s ease-out;
+}
+
+/* Slide-in animation for notifications */
+@keyframes slide-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Slide-out animation for notifications */
+@keyframes slide-out {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* Animation for notification disappearing */
+.notification-container.disappearing {
+  animation: slide-out 0.5s ease-in forwards;
+}
+
+/* Notification card - the main card UI */
+.notification-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  position: relative;
+  border-left: 5px solid #2ecc71; /* Green for success */
+}
+
+/* Close button for notifications */
+.notification-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.notification-close:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* Notification content container */
+.notification-content {
+  padding: 20px;
+}
+
+/* Notification title */
+.notification-title {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Notification details container */
+.notification-details {
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.notification-details p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Notification footer text */
+.notification-footer {
+  margin: 10px 0 0 0;
+  font-size: 13px;
+  color: #888;
+  font-style: italic;
+}
+
+/* Cancellation notification specific styles */
+.notification-container.cancellation .notification-card {
+  border-left-color: #e74c3c; /* Red for cancellation */
+}
+
+.notification-message {
+  font-size: 14px;
+  color: #555;
+  margin: 10px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .notification-container {
+    bottom: 20px;
+    right: 20px;
+    width: calc(100vw - 40px);
+  }
+  
+  .notification-title {
+    font-size: 16px;
+  }
+  
+  .notification-details p {
+    font-size: 13px;
+  }
+} 

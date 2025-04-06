@@ -1,9 +1,33 @@
-import React from "react"; // Importing the necessary modules from React library
-import { Link } from "react-router-dom"; // Importing the Link component from react-router-dom library
+import React, { useState, useEffect } from "react"; // Importing the necessary modules from React library
+import { Link, useNavigate } from "react-router-dom"; // Importing the Link and useNavigate components from react-router-dom library
 import "./Landing_page.css"; // Importing the CSS styles for the Landing_Page component
 
 // Defining the Function component Landing_Page
 const Landing_Page = () => {
+  const navigate = useNavigate(); // Initialize the navigate function
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to check if user is logged in
+  
+  // Effect to check user's login status on component mount
+  useEffect(() => {
+    const authToken = sessionStorage.getItem("auth-token");
+    if (authToken) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+  
+  // Handle Get Started button click
+  const handleGetStarted = () => {
+    if (isLoggedIn) {
+      // If user is logged in, navigate to booking consultation page
+      navigate("/booking-consultation");
+    } else {
+      // If not logged in, scroll to services section
+      document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
+      // Alternatively, you could redirect to login page
+      // navigate("/login");
+    }
+  };
+  
   return (
     <section className="hero-section"> {/* Creating a section with class name 'hero-section' */}
       <div>
@@ -26,11 +50,14 @@ const Landing_Page = () => {
             <h4>
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eaque at quae ducimus. Suscipit omnis quibusdam non cum rem voluptatem!
             </h4>
-            <a href="#services"> {/* Creating a hyperlink to jump to the 'services' section */}
-              <button className="button">Get Started</button> {/* Creating a button with class name 'button' */}
-            </a>
+            {/* Use button with onClick handler instead of anchor tag */}
+            <button className="button" onClick={handleGetStarted}>
+              {isLoggedIn ? "Book Consultation" : "Get Started"}
+            </button>
         </div>
       </div>
+      
+      <div id="services"></div> {/* Add an empty div as the services section target */}
     </section>
   );
 };

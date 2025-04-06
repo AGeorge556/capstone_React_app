@@ -74,9 +74,12 @@ const SignUp = () => {
                 sessionStorage.setItem("phone", phone);
                 sessionStorage.setItem("email", email);
 
-                // Redirect user to home page
+                // Dispatch a custom login event to notify other components
+                const loginEvent = new Event('login');
+                window.dispatchEvent(loginEvent);
+
+                // Redirect user to home page after successful registration and auto-login
                 navigate("/");
-                window.location.reload(); // Refresh the page
             } else {
                 if (json.errors) {
                     for (const error of json.errors) {

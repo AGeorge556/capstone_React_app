@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './navbar.css';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -6,9 +6,11 @@ const Navbar = ({ handleClick }) => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
   
-  // Check for user authentication on component mount
-  useEffect(() => {
+  // Function to check authentication status
+  const checkAuthStatus = () => {
     const authToken = sessionStorage.getItem('auth-token');
     const name = sessionStorage.getItem('name');
     const email = sessionStorage.getItem('email');
@@ -27,6 +29,55 @@ const Navbar = ({ handleClick }) => {
     } else {
       setIsLoggedIn(false);
     }
+  };
+  
+  // Check for user authentication on component mount and when auth status changes
+  useEffect(() => {
+    // Initial check
+    checkAuthStatus();
+    
+    // Add event listener for storage changes to detect login/logout from other components
+    const handleStorageChange = (e) => {
+      if (e.key === 'auth-token' || e.key === 'email' || e.key === 'name') {
+        checkAuthStatus();
+      }
+    };
+    
+    // Create a custom event listener for login
+    const handleLoginEvent = () => {
+      checkAuthStatus();
+    };
+    
+    // Listen for profile updates
+    const handleProfileUpdate = () => {
+      checkAuthStatus();
+    };
+    
+    // Add event listeners
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('login', handleLoginEvent);
+    window.addEventListener('profileUpdate', handleProfileUpdate);
+    
+    // Check auth status every second (as a fallback)
+    const intervalId = setInterval(checkAuthStatus, 1000);
+    
+    // Handle clicks outside dropdown to close it
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('login', handleLoginEvent);
+      window.removeEventListener('profileUpdate', handleProfileUpdate);
+      document.removeEventListener('mousedown', handleClickOutside);
+      clearInterval(intervalId);
+    };
   }, []);
   
   const handleLogout = () => {
@@ -39,9 +90,14 @@ const Navbar = ({ handleClick }) => {
     // Update state
     setIsLoggedIn(false);
     setUserName('');
+    setShowDropdown(false);
     
     // Navigate to home page
     navigate('/');
+  };
+  
+  const toggleDropdown = () => {
+    setShowDropdown(prev => !prev);
   };
 
   return (
@@ -83,17 +139,47 @@ const Navbar = ({ handleClick }) => {
         <li className="link">
           <Link to="/">Home</Link>
         </li>
-        <li className="link">
-          <Link to="#">Appointments</Link>
-        </li>
         {isLoggedIn ? (
-          // Display welcome message and logout button if user is logged in
           <>
             <li className="link">
-              <span style={{ marginRight: '10px' }}>Hello, {userName}</span>
+              <Link to="/booking-consultation">Book Appointment</Link>
             </li>
             <li className="link">
-              <button className="btn1" onClick={handleLogout}>Logout</button>
+              <Link to="/instant-consultation">Instant Consultation</Link>
+            </li>
+            <li className="link">
+              <Link to="/reviews">Reviews</Link>
+            </li>
+            <li className="link user-profile-dropdown" ref={dropdownRef} style={{ zIndex: 1000 }}>
+              <div className="profile-dropdown-toggle" onClick={toggleDropdown}>
+                <div className="avatar-circle">
+                  {userName.charAt(0).toUpperCase()}
+                </div>
+                <span>{userName}</span>
+                <i className={`dropdown-arrow ${showDropdown ? 'up' : 'down'}`}></i>
+              </div>
+              
+              {showDropdown && (
+                <div className="dropdown-menu">
+                  <Link to="/profile" className="dropdown-item" onClick={() => setShowDropdown(false)}>
+                    <i className="dropdown-icon profile-icon"></i>
+                    My Profile
+                  </Link>
+                  <Link to="/reports" className="dropdown-item" onClick={() => setShowDropdown(false)}>
+                    <i className="dropdown-icon reports-icon"></i>
+                    Your Reports
+                  </Link>
+                  <Link to="/reviews" className="dropdown-item" onClick={() => setShowDropdown(false)}>
+                    <i className="dropdown-icon reviews-icon"></i>
+                    My Reviews
+                  </Link>
+                  <div className="dropdown-divider"></div>
+                  <button className="dropdown-item logout-item" onClick={handleLogout}>
+                    <i className="dropdown-icon logout-icon"></i>
+                    Logout
+                  </button>
+                </div>
+              )}
             </li>
           </>
         ) : (
