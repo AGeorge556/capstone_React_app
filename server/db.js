@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const mongoURI = "mongodb://localhost:27017/healthcareapp";
+const mongoURI = "mongodb://root:TVdruTdnFN1Eif1lkSmGem2m@172.21.94.170:27017/healthcareapp";
 
 // Set strictQuery to false to suppress deprecation warnings
 mongoose.set('strictQuery', false);
